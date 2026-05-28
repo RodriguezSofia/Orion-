@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - ARION{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-light font-inter mb-5">
+
+    <div class="position-relative">
+        <div class="h-52 w-100 position-relative overflow-hidden" style="height: 208px; background: linear-gradient(to right, #0d6efd, #2563eb, #1e40af);">
+            <div class="position-absolute inset-0 opacity-20 profile-cover-pattern"></div>
+        </div>
+
+        <div class="container max-w-5xl">
+            <div class="position-relative d-flex flex-column sm-profile-row align-items-start align-items-sm-end gap-3 pb-4" style="margin-top: -64px; z-index: 10;">
+                
+                <div class="position-relative group-avatar">
+                    <div class="rounded-4 border border-4 border-white shadow bg-white d-flex align-items-center justify-content-center overflow-hidden" style="width: 112px; height: 112px;">
+                        <img
+                            src="https://media.base44.com/images/public/6a0b20e9963ca6f1bc80b187/fbad67262_cabecera_sin_fondo.png"
+                            alt="Avatar"
+                            class="w-100 h-100 object-cover"
+                        />
+                    </div>
+                    <button class="position-absolute bottom-0 end-0 m-1 btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm border border-2 border-white hover-scale" style="width: 28px; height: 28px;">
+                        <i class="bi bi-upload text-white" style="font-size: 11px;"></i>
+                    </button>
+                </div>
+
+                <div class="flex-grow-1 w-100">
+                    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-3 w-100">
+                        <div>
+                            <h1 class="fw-black text-dark h3 m-0">{% if session.get('user_name') %}{{ session['user_name'] }}{% else %}Ana Gómez{% endif %}</h1>
+                            <p class="text-muted small m-0">@anagomez · Diseñadora & Desarrolladora</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button id="btn-edit-profile" class="btn btn-white bg-white border rounded-pill px-3 py-1.5 d-flex align-items-center gap-2 shadow-sm small fw-medium" style="height: 36px;">
+                                <i class="bi bi-pencil-square"></i> Editar perfil
+                            </button>
+                            <button class="btn btn-white bg-white border rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; p-0;">
+                                <i class="bi bi-gear text-secondary"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container max-w-5xl mt-3">
+        <div class="row g-4">
+            
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-3">
+                    <h6 class="fw-bold text-dark small mb-3">Estadísticas</h6>
+                    <div class="row g-3" id="stats-container">
+                        </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                    <h6 class="fw-bold text-dark small mb-2">Logros destacados</h6>
+                    <div class="d-flex flex-column gap-2" id="achievements-container">
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8 col-lg-9">
+                <div class="bg-white border rounded-4 p-1.5 d-inline-flex gap-1 mb-4 shadow-sm w-100 w-sm-auto">
+                    <button class="btn btn-sm rounded-3 tab-trigger active-tab px-4 py-2 small fw-medium" data-tab="proyectos">
+                        <i class="bi bi-grid-3x3-gap me-1.5"></i>Mis proyectos
+                    </button>
+                    <button class="btn btn-sm text-muted rounded-3 tab-trigger px-4 py-2 small fw-medium" data-tab="guardados">
+                        <i class="bi bi-bookmark me-1.5"></i>Guardados
+                    </button>
+                </div>
+
+                <div id="tab-content-proyectos" class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-2">
+                    </div>
+
+                <div id="tab-content-guardados" class="d-none text-center py-5">
+                    <div class="text-muted mb-2"><i class="bi bi-bookmark-dash fs-2"></i></div>
+                    <p class="text-muted small">No tienes proyectos guardados todavía.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Arreglo de tus proyectos propios
+    const myProjects = [
+      { id: 1, title: "EcoHouse", category: "Sostenibilidad", rating: 4.8, views: 125, likes: 34, image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&h=250&fit=crop", featured: true },
+      { id: 2, title: "TaskFlow", category: "Tecnología", rating: 4.7, views: 98, likes: 21, image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop", featured: false },
+      { id: 3, title: "SolarGrid", category: "Ciencia", rating: 4.5, views: 67, likes: 12, image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=250&fit=crop", featured: false },
+    ];
+
+    // Arreglo de logros
+    const achievements = [
+      { icon: "🏆", title: "Primer proyecto", desc: "Subiste tu primer proyecto" },
+      { icon: "⭐", title: "Bien valorado", desc: "Rating superior a 4.5" },
+      { icon: "🔥", title: "Trending", desc: "Proyecto en tendencias" },
+      { icon: "👥", title: "100 seguidores", desc: "Alcanzaste 100 seguidores" },
+    ];
+
+    // Arreglo de estadísticas
+    const stats = [
+      { label: "Proyectos", value: "12" },
+      { label: "Seguidores", value: "348" },
+      { label: "Siguiendo", value: "89" },
+      { label: "Vistas", value: "2.4K" },
+    ];
+
+    // 1. Renderizar Estadísticas
+    const statsContainer = document.getElementById('stats-container');
+    stats.forEach(s => {
+        statsContainer.insertAdjacentHTML('beforeend', `
+            <div class="col-6">
+                <div class="bg-light rounded-3 p-2 text-center border-0">
+                    <div class="fw-black text-dark h5 mb-0">${s.value}</div>
+                    <div class="text-muted text-xs font-medium">${s.label}</div>
+                </div>
+            </div>
+        `);
+    });
+
+    // 2. Renderizar Logros
+    const achievementsContainer = document.getElementById('achievements-container');
+    achievements.forEach(a => {
+        achievementsContainer.insertAdjacentHTML('beforeend', `
+            <div class="d-flex align-items-center gap-2.5 p-2 bg-light rounded-3 border-0">
+                <span class="fs-4 bg-white rounded-2 px-2 py-1 shadow-sm border-light">${a.icon}</span>
+                <div class="min-w-0">
+                    <div class="fw-bold text-dark small text-truncate m-0" style="line-height:1.2;">${a.title}</div>
+                    <div class="text-muted text-xs text-truncate">${a.desc}</div>
+                </div>
+            </div>
+        `);
+    });
+
+    // 3. Renderizar Proyectos Propios
+    const projectsContainer = document.getElementById('tab-content-proyectos');
+    myProjects.forEach(p => {
+        projectsContainer.insertAdjacentHTML('beforeend', `
+            <div class="col">
+                <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden custom-profile-card" onclick="window.location.href='/proyecto/${p.id}'">
+                    <div class="position-relative overflow-hidden" style="height: 160px;">
+                        <img src="${p.image}" class="w-100 h-100 object-cover card-img-anim" alt="${p.title}">
+                        ${p.featured ? '<span class="position-absolute top-0 start-0 m-3 badge bg-warning text-dark rounded-pill fw-bold" style="font-size:10px;">⭐ Destacado</span>' : ''}
+                    </div>
+                    <div class="card-body p-4 flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title fw-bold text-dark mb-1 h6 card-title-hover">${p.title}</h5>
+                            <span class="badge bg-secondary-subtle text-secondary rounded-2 px-2.5 py-1 text-xs">${p.category}</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end gap-3 mt-3 pt-3 border-t text-muted small" style="font-size: 11px;">
+                            <span><i class="bi bi-star-fill text-warning me-0.5"></i>${p.rating}</span>
+                            <span><i class="bi bi-eye me-0.5"></i>${p.views}</span>
+                            <span><i class="bi bi-heart me-0.5"></i>${p.likes}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+
+    // 4. Lógica de Manejo de Pestañas (Tabs de React a JS)
+    document.querySelectorAll('.tab-trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-trigger').forEach(t => {
+                t.className = "btn btn-sm text-muted rounded-3 tab-trigger px-4 py-2 small fw-medium";
+            });
+            e.currentTarget.className = "btn btn-sm rounded-3 tab-trigger active-tab px-4 py-2 small fw-medium";
+            
+            const selectedTab = e.currentTarget.getAttribute('data-tab');
+            if(selectedTab === 'proyectos') {
+                document.getElementById('tab-content-proyectos').classList.remove('d-none');
+                document.getElementById('tab-content-guardados').classList.add('d-none');
+            } else {
+                document.getElementById('tab-content-proyectos').classList.add('d-none');
+                document.getElementById('tab-content-guardados').classList.remove('d-none');
+            }
+        });
+    });
+
+    // Simulación del estado de edición de perfil
+    document.getElementById('btn-edit-profile').addEventListener('click', () => {
+        alert("Función para abrir modal o formulario de edición de perfil activada ✨");
+    });
+</script>
+
+<style>
+    /* Estilos Estéticos Específicos para el Perfil */
+    .max-w-5xl { max-width: 1024px; }
+    .text-xs { font-size: 0.72rem; }
+    .gap-2\.5 { gap: 0.65rem; }
+    .border-t { border-top: 1px solid #f3f4f6; }
+    .object-cover { object-fit: cover; }
+    
+    /* Adaptación Responsiva para el Avatar */
+    @media (min-width: 576px) {
+        .sm-profile-row { flex-direction: row !important; }
+    }
+
+    /* Patrón de fondo del Banner */
+    .profile-cover-pattern {
+        background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    /* Manejo visual de la pestaña Activa */
+    .active-tab {
+        background-color: #0d6efd !important;
+        color: white !important;
+        box-shadow: 0 4px 6px -1px rgba(13, 110, 253, 0.15);
+    }
+
+    /* Animaciones y Estados Hover de Tarjetas */
+    .custom-profile-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .custom-profile-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04) !important;
+    }
+    .card-img-anim { transition: transform 0.3s ease; }
+    .custom-profile-card:hover .card-img-anim { transform: scale(1.03); }
+    .card-title-hover { transition: color 0.2s ease; }
+    .custom-profile-card:hover .card-title-hover { color: #0d6efd !important; }
+    .hover-scale:hover { transform: scale(1.1); }
+</style>
+{% endblock %}

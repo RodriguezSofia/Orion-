@@ -1,0 +1,392 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Proyecto - ARION{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-light font-inter pb-5">
+
+    <section class="bg-primary text-white py-5 text-start" style="background: linear-gradient(135deg, #0d6efd 0%, #2563eb 50%, #1e40af 100%) !important;">
+        <div class="container max-w-4xl py-2">
+            <div class="d-flex align-items-center gap-4">
+                <img 
+                    src="https://media.base44.com/images/public/6a0b20e9963ca6f1bc80b187/df96054b0_leo_principal.png" 
+                    alt="Lemi" 
+                    class="img-fluid floating-anim" 
+                    style="width: 86px; height: 86px; object-fit: contain;"
+                >
+                <div>
+                    <h1 class="h2 fw-black m-0 text-white">Sube tu proyecto</h1>
+                    <p class="text-white-50 m-0 mt-1 fs-5">Comparte tu idea con miles de personas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container max-w-4xl mt-5">
+        
+        <div class="d-flex align-items-center justify-content-center mb-5 flex-wrap gap-y-3" id="stepper-container">
+            <div class="d-flex align-items-center step-item" data-step-index="0">
+                <button type="button" class="btn p-0 d-flex flex-column align-items-center gap-1 border-0 focus-none step-trigger-btn">
+                    <div class="step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all active-step">1</div>
+                    <span class="text-xs font-medium text-primary d-none d-sm-block">Información básica</span>
+                </button>
+                <div class="step-line mx-2 bg-border"></div>
+            </div>
+
+            <div class="d-flex align-items-center step-item" data-step-index="1">
+                <button type="button" class="btn p-0 d-flex flex-column align-items-center gap-1 border-0 focus-none step-trigger-btn">
+                    <div class="step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all inactive-step">2</div>
+                    <span class="text-xs font-medium text-muted d-none d-sm-block">Multimedia</span>
+                </button>
+                <div class="step-line mx-2 bg-border"></div>
+            </div>
+
+            <div class="d-flex align-items-center step-item" data-step-index="2">
+                <button type="button" class="btn p-0 d-flex flex-column align-items-center gap-1 border-0 focus-none step-trigger-btn">
+                    <div class="step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all inactive-step">3</div>
+                    <span class="text-xs font-medium text-muted d-none d-sm-block">Detalles</span>
+                </button>
+                <div class="step-line mx-2 bg-border"></div>
+            </div>
+
+            <div class="d-flex align-items-center step-item" data-step-index="3">
+                <button type="button" class="btn p-0 d-flex flex-column align-items-center gap-1 border-0 focus-none step-trigger-btn">
+                    <div class="step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all inactive-step">4</div>
+                    <span class="text-xs font-medium text-muted d-none d-sm-block">Publicar</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-sm-5 bg-white text-start">
+            <form id="upload-project-form" method="POST" action="/subir">
+                
+                <div id="step-content-0" class="step-pane style-pane-fade">
+                    <div class="mb-4">
+                        <h2 class="h5 fw-bold text-dark mb-1">Información básica</h2>
+                        <p class="text-muted small m-0">Cuéntanos sobre tu proyecto</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="title" class="form-label small fw-medium text-dark">Título del proyecto *</label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            class="form-control rounded-3" 
+                            placeholder="Ej: Mi App de Productividad" 
+                            style="height: 44px;" 
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label small fw-medium text-dark">Descripción *</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            class="form-control rounded-3 p-3" 
+                            placeholder="Describe tu proyecto de forma clara y atractiva..." 
+                            rows="5" 
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-medium text-dark mb-2">Categoría *</label>
+                        <input type="hidden" id="selected-category" name="category" required>
+                        <div class="d-flex flex-wrap gap-2" id="categories-badge-group">
+                            </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-medium text-dark">Etiquetas</label>
+                        <div class="d-flex gap-2">
+                            <input 
+                                type="text" 
+                                id="tag-input" 
+                                class="form-control rounded-3" 
+                                placeholder="Añadir etiqueta y presiona Enter..." 
+                                style="height: 42px;"
+                            >
+                            <button type="button" id="btn-add-tag" class="btn btn-outline-secondary rounded-3 px-3 d-flex align-items-center justify-content-center" style="height: 42px;">
+                                <i class="bi bi-plus-lg fs-5"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3" id="tags-badge-container"></div>
+                        <input type="hidden" id="hidden-tags-input" name="tags">
+                    </div>
+                </div>
+
+                <div id="step-content-1" class="step-pane d-none style-pane-fade text-center py-4">
+                    <i class="bi bi-images fs-1 text-muted mb-2 d-block"></i>
+                    <h3 class="h5 fw-bold text-dark">Zona Multimedia</h3>
+                    <p class="text-muted small max-w-sm mx-auto">Arrastra o sube imágenes/vídeos descriptivos para tu galería del proyecto.</p>
+                </div>
+
+                <div id="step-content-2" class="step-pane d-none style-pane-fade text-center py-4">
+                    <i class="bi bi-file-text fs-1 text-muted mb-2 d-block"></i>
+                    <h3 class="h5 fw-bold text-dark">Detalles del Proyecto</h3>
+                    <p class="text-muted small max-w-sm mx-auto">Agrega links a GitHub, demostraciones en vivo o documentación en PDF.</p>
+                </div>
+
+                <div id="step-content-3" class="step-pane d-none style-pane-fade text-center py-4">
+                    <i class="bi bi-check-circle text-success fs-1 mb-2 d-block"></i>
+                    <h3 class="h5 fw-bold text-dark">¡Todo listo para Lanzar!</h3>
+                    <p class="text-muted small max-w-sm mx-auto">Revisa que la información sea correcta antes de enviar el proyecto a la comunidad.</p>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                    <button type="button" id="btn-prev-step" class="btn btn-light rounded-pill px-4 fw-medium border shadow-sm d-none" style="height: 42px;">
+                        Anterior
+                    </button>
+                    <button type="button" id="btn-next-step" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm ms-auto" style="height: 42px;">
+                        Siguiente <i class="bi bi-chevron-right small ms-1"></i>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Data inicial equivalente a los hooks de React
+    const categories = ["Tecnología", "Diseño", "IA", "Sostenibilidad", "Educación", "Salud", "Arte", "Ciencia", "Otro"];
+    let currentStep = 0;
+    let selectedCategory = "";
+    let tagsList = ["React", "IA"]; // Estados iniciales idénticos
+
+    // Elementos del DOM
+    const categoriesContainer = document.getElementById('categories-badge-group');
+    const tagsContainer = document.getElementById('tags-badge-container');
+    const tagInput = document.getElementById('tag-input');
+    const btnAddTag = document.getElementById('btn-add-tag');
+    const hiddenTagsInput = document.getElementById('hidden-tags-input');
+    const selectedCategoryInput = document.getElementById('selected-category');
+    
+    const btnPrev = document.getElementById('btn-prev-step');
+    const btnNext = document.getElementById('btn-next-step');
+
+    // 1. RENDERIZAR CATEGORÍAS (Mapeo de botones con selección única)
+    function renderCategories() {
+        categoriesContainer.innerHTML = "";
+        categories.forEach(c => {
+            const isSelected = c === selectedCategory;
+            const badgeClass = isSelected 
+                ? 'bg-primary text-white border-primary shadow-sm' 
+                : 'bg-white border text-muted hover-category';
+            
+            categoriesContainer.insertAdjacentHTML('beforeend', `
+                <button type="button" class="btn btn-sm rounded-pill px-3 py-1.5 small fw-medium transition-all ${badgeClass}" onclick="selectCategory('${c}')">
+                    ${c}
+                </button>
+            `);
+        });
+    }
+
+    window.selectCategory = function(cat) {
+        selectedCategory = cat;
+        selectedCategoryInput.value = cat; // Asigna el valor al input oculto
+        renderCategories();
+    }
+
+    // 2. LOGICA DINÁMICA DE ETIQUETAS (TAGS)
+    function renderTags() {
+        tagsContainer.innerHTML = "";
+        tagsList.forEach(t => {
+            tagsContainer.insertAdjacentHTML('beforeend', `
+                <span class="badge bg-secondary-subtle text-dark border-0 px-3 py-2 rounded-2 d-inline-flex align-items-center gap-1.5 font-medium style-tag-fade" style="font-size: 0.8rem;">
+                    ${t}
+                    <i class="bi bi-x-lg cursor-pointer text-muted hover-text-danger" style="font-size: 0.7rem; padding: 2px;" onclick="removeTag('${t}')"></i>
+                </span>
+            `);
+        });
+        // Sincroniza la lista en un string separado por comas para enviar por POST
+        hiddenTagsInput.value = tagsList.join(',');
+    }
+
+    function addTag() {
+        const val = tagInput.value.trim();
+        if (val && !tagsList.includes(val)) {
+            tagsList.push(val);
+            tagInput.value = "";
+            renderTags();
+        }
+    }
+
+    window.removeTag = function(t) {
+        tagsList = tagsList.filter(x => x !== t);
+        renderTags();
+    }
+
+    // Escuchas para añadir tags
+    btnAddTag.addEventListener('click', addTag);
+    tagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Evita enviar el formulario al pulsar Enter en el input
+            addTag();
+        }
+    });
+
+    // 3. CONTROLADOR INTERACTIVO DEL STEPPER (Cambio de Pestañas Visuales)
+    function updateStepperUI() {
+        // Ocultar todas las secciones de contenido
+        document.querySelectorAll('.step-pane').forEach(pane => pane.classList.add('d-none'));
+        // Mostrar la activa
+        document.getElementById(`step-content-${currentStep}`).classList.remove('d-none');
+
+        // Actualizar diseño de los círculos numéricos del stepper
+        document.querySelectorAll('.step-item').forEach((item, index) => {
+            const circle = item.querySelector('.step-circle');
+            const spanText = item.querySelector('span');
+            const line = item.querySelector('.step-line');
+
+            if (index < currentStep) {
+                // Paso completado con éxito
+                circle.className = "step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all bg-success text-white shadow-sm";
+                circle.innerHTML = `<i class="bi bi-check-circle-fill fs-5" style="line-height:0;"></i>`;
+                if(spanText) spanText.className = "text-xs font-medium text-success d-none d-sm-block";
+                if(line) line.style.backgroundColor = "#198754"; // Verde success
+            } else if (index === currentStep) {
+                // Paso actual activo
+                circle.className = "step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all bg-primary text-white shadow-lg-primary active-step";
+                circle.innerHTML = index + 1;
+                if(spanText) spanText.className = "text-xs font-medium text-primary d-none d-sm-block";
+                if(line) line.style.backgroundColor = "#dee2e6";
+            } else {
+                // Paso futuro inactivo
+                circle.className = "step-circle rounded-circle d-flex align-items-center justify-content-center fw-bold transition-all bg-light border text-muted inactive-step";
+                circle.innerHTML = index + 1;
+                if(spanText) spanText.className = "text-xs font-medium text-muted d-none d-sm-block";
+                if(line) line.style.backgroundColor = "#dee2e6";
+            }
+        });
+
+        // Control de visibilidad de los botones de abajo
+        if (currentStep === 0) {
+            btnPrev.classList.add('d-none');
+        } else {
+            btnPrev.classList.remove('d-none');
+        }
+
+        if (currentStep === 3) {
+            btnNext.innerHTML = `Publicar proyecto <i class="bi bi-cloud-arrow-up-fill ms-1"></i>`;
+            btnNext.className = "btn btn-success rounded-pill px-4 fw-medium shadow-sm";
+        } else {
+            btnNext.innerHTML = `Siguiente <i class="bi bi-chevron-right small ms-1"></i>`;
+            btnNext.className = "btn btn-primary rounded-pill px-4 fw-medium shadow-sm";
+        }
+    }
+
+    // Navegación de botones
+    btnNext.addEventListener('click', () => {
+        // Validación manual simple para el Paso 0 antes de avanzar
+        if (currentStep === 0) {
+            const titleVal = document.getElementById('title').value.trim();
+            const descVal = document.getElementById('description').value.trim();
+            
+            if (!titleVal || !descVal || !selectedCategory) {
+                alert("Por favor rellena todos los campos obligatorios (*) y selecciona una categoría antes de continuar. ✨");
+                return;
+            }
+        }
+
+        if (currentStep < 3) {
+            currentStep++;
+            updateStepperUI();
+        } else {
+            // Si está en el último paso (Paso 3), hace el Submit real del Formulario
+            document.getElementById('upload-project-form').submit();
+        }
+    });
+
+    btnPrev.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateStepperUI();
+        }
+    });
+
+    // Permitir saltar clicleando directamente los números del Stepper si se desea
+    document.querySelectorAll('.step-item').forEach((item) => {
+        item.querySelector('.step-trigger-btn').addEventListener('click', () => {
+            const idx = parseInt(item.getAttribute('data-step-index'));
+            // Solo permite saltar libremente si ya se validó el primer paso
+            const titleVal = document.getElementById('title').value.trim();
+            const descVal = document.getElementById('description').value.trim();
+            if (idx > 0 && (!titleVal || !descVal || !selectedCategory)) return;
+            
+            currentStep = idx;
+            updateStepperUI();
+        });
+    });
+
+    // Inicializaciones obligatorias al cargar la vista
+    renderCategories();
+    renderTags();
+    updateStepperUI();
+</script>
+
+<style>
+    /* Clases de Maquetación Utilitarias */
+    .max-w-4xl { max-width: 896px; }
+    .max-w-sm { max-width: 380px; }
+    .text-xs { font-size: 0.75rem; }
+    .bg-border { background-color: #dee2e6; }
+    .focus-none:focus { box-shadow: none !important; }
+    .cursor-pointer { cursor: pointer; }
+
+    /* Estilo Específico del Stepper Lineal */
+    .step-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    .step-line {
+        width: 64px;
+        height: 2px;
+        margin-top: -16px;
+    }
+    @media (min-width: 576px) {
+        .step-line { width: 96px; }
+    }
+
+    /* Sombras personalizadas de foco y estado */
+    .shadow-lg-primary {
+        box-shadow: 0 8px 16px -4px rgba(13, 110, 253, 0.35) !important;
+    }
+    .hover-category:hover {
+        border-color: #0d6efd !important;
+        color: #0d6efd !important;
+        background-color: rgba(13, 110, 253, 0.02);
+    }
+    .hover-text-danger:hover {
+        color: #dc3545 !important;
+    }
+
+    /* Animaciones y transiciones de entrada suaves */
+    .floating-anim {
+        animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+    }
+
+    .style-pane-fade {
+        animation: paneIn 0.35s ease-out forwards;
+    }
+    @keyframes paneIn {
+        from { opacity: 0; transform: translateX(12px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .style-tag-fade {
+        animation: tagIn 0.2s ease-out forwards;
+    }
+    @keyframes tagIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+{% endblock %}

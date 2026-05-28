@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+
+{% block title %}Centro de Recursos - ARION{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-light font-inter pb-5">
+
+    <section class="border-bottom bg-white py-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(13,110,253,0.03) 0%, rgba(13,202,240,0.05) 100%) !important;">
+        <div class="container max-w-7xl py-3">
+            <div class="row align-items-center g-4">
+                <div class="col-12 col-md-8 text-start">
+                    <span class="badge bg-primary-subtle text-primary border-0 mb-3 px-3 py-2 rounded-2 small fw-semibold">Centro de Recursos</span>
+                    <h1 class="display-5 fw-black text-dark mb-2">Todo para <span class="text-primary">crecer</span></h1>
+                    <p class="text-muted mt-2 fs-5 max-w-lg leading-relaxed" style="max-width: 520px;">
+                        Guías, tutoriales y plantillas para ayudarte a sacar el máximo partido a Arion.
+                    </p>
+                    
+                    <div class="position-relative mt-4" style="max-width: 440px;">
+                        <span class="position-absolute top-50 start-0 translate-middle-y ps-3 text-muted z-3" style="pointer-events: none; line-height: 0;">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input 
+                            id="search-input"
+                            type="text"
+                            placeholder="Buscar recursos..." 
+                            class="form-control rounded-pill border-2 search-focus" 
+                            style="height: 48px; padding-left: 42px;"
+                        >
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 text-center text-md-end">
+                    <img 
+                        src="https://media.base44.com/images/public/6a0b20e9963ca6f1bc80b187/df96054b0_leo_principal.png" 
+                        alt="Lemi" 
+                        class="img-fluid floating-anim" 
+                        style="max-height: 160px; object-fit: contain;"
+                    >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container max-w-7xl mt-5 space-y-5">
+        
+        <section class="mb-5 text-start">
+            <h2 class="h4 fw-bold text-dark mb-4">Recursos destacados</h2>
+            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3" id="featured-container">
+                </div>
+        </section>
+
+        <section class="mb-5 text-start">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h2 class="h4 fw-bold text-dark m-0">Todos los recursos</h2>
+            </div>
+            
+            <div class="d-flex gap-2 flex-wrap mb-4" id="categories-container">
+                </div>
+
+            <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3" id="resources-grid">
+                </div>
+            
+            <div id="no-results" class="text-center py-5 d-none">
+                <i class="bi bi-search text-muted fs-2"></i>
+                <p class="text-muted mt-2 small">No se encontraron recursos que coincidan con tu búsqueda o filtro.</p>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-4 border p-4 p-md-5 mb-5 text-start shadow-sm">
+            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-4 mb-4">
+                <img 
+                    src="https://media.base44.com/images/public/6a0b20e9963ca6f1bc80b187/fbad67262_cabecera_sin_fondo.png" 
+                    alt="Lemi Cabecera" 
+                    class="img-fluid" 
+                    style="width: 72px; height: 72px; object-fit: contain;"
+                >
+                <div>
+                    <h2 class="h4 fw-bold text-dark m-0">Preguntas frecuentes</h2>
+                    <p class="text-muted small m-0 mt-0.5">Resolvemos tus dudas más comunes</p>
+                </div>
+            </div>
+            
+            <div class="d-flex flex-column gap-3" id="faq-container">
+                </div>
+        </section>
+
+        <section class="bg-primary rounded-4 p-4 p-md-5 d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4 text-white shadow-sm">
+            <div class="text-start">
+                <h2 class="h3 fw-black m-0">¿Tienes alguna pregunta?</h2>
+                <p class="text-white-50 m-0 mt-1 fs-6">Nuestro equipo está aquí para ayudarte.</p>
+            </div>
+            <button class="btn btn-light rounded-pill px-4 py-2.5 text-primary fw-semibold d-inline-flex align-items-center gap-2 hover-scale shadow-sm whitespace-nowrap" style="height: 46px;">
+                Contactar soporte <i class="bi bi-arrow-right"></i>
+            </button>
+        </section>
+
+    </div>
+</div>
+
+<script>
+    // 1. Definición de Estructuras de Datos Originales
+    const resourceCategories = ["Todos", "Guías", "Tutoriales", "Plantillas", "Video", "Artículo"];
+
+    const featuredResources = [
+        { icon: "🚀", title: "Cómo crear un proyecto exitoso", type: "Guía", readTime: "5 min", rating: 4.9, color: "linear-gradient(to bottom right, rgba(13,110,253,0.08), rgba(13,110,253,0.03))" },
+        { icon: "🎨", title: "Diseño visual para proyectos", type: "Tutorial", readTime: "8 min", rating: 4.7, color: "linear-gradient(to bottom right, #fdf2f8, #f3e8ff)" },
+        { icon: "📊", title: "Métricas que importan", type: "Artículo", readTime: "4 min", rating: 4.8, color: "linear-gradient(to bottom right, #f0fdf4, #ecfdf5)" },
+    ];
+
+    const allResources = [
+        { id: 1, title: "Guía completa de Arion", desc: "Todo lo que necesitas saber para comenzar en la plataforma.", type: "Guía", icon: "bi-book", colorClass: "bg-primary-subtle text-primary", image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=250&fit=crop" },
+        { id: 2, title: "Video: Sube tu primer proyecto", desc: "Tutorial en video paso a paso para subir tu proyecto.", type: "Video", icon: "bi-video", colorClass: "bg-danger-subtle text-danger", image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=400&h=250&fit=crop" },
+        { id: 3, title: "Plantilla de descripción", desc: "Usa esta plantilla para describir tu proyecto de forma efectiva.", type: "Plantilla", icon: "bi-file-earmark-text", colorClass: "bg-warning-subtle text-warning-emphasis", image: "https://images.unsplash.com/photo-1586282391129-76a6df230234?w=400&h=250&fit=crop" },
+        { id: 4, title: "Cómo conseguir más vistas", desc: "Estrategias probadas para aumentar la visibilidad de tu proyecto.", type: "Artículo", icon: "bi-book", colorClass: "bg-success-subtle text-success", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop" },
+        { id: 5, title: "Webinar: IA en proyectos", desc: "Aprende a integrar IA en tus proyectos educativos.", type: "Video", icon: "bi-video", colorClass: "bg-purple-subtle text-purple", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=250&fit=crop" },
+        { id: 6, title: "Kit de recursos visuales", desc: "Iconos, colores y elementos para mejorar tu presentación.", type: "Plantilla", icon: "bi-download", colorClass: "bg-info-subtle text-info-emphasis", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop" },
+    ];
+
+    const faqs = [
+        { q: "¿Cómo puedo hacer que mi proyecto sea destacado?", a: "Los proyectos destacados se seleccionan basándose en calidad, originalidad y engagement de la comunidad." },
+        { q: "¿Cuántos proyectos puedo subir?", a: "Puedes subir proyectos ilimitados en tu cuenta de Arion." },
+        { q: "¿Cómo funciona el sistema de valoraciones?", a: "La comunidad puede votar y comentar tus proyectos. La valoración es el promedio de todos los votos." },
+    ];
+
+    // Variables de Estado de la Interfaz
+    let activeCategory = "Todos";
+    let searchQuery = "";
+    let openFaqIndex = null;
+
+    // 2. Renderizar Recursos Destacados (Cards Superiores)
+    const featuredContainer = document.getElementById('featured-container');
+    featuredResources.forEach(r => {
+        featuredContainer.insertAdjacentHTML('beforeend', `
+            <div class="col">
+                <div class="card h-100 border rounded-4 p-4 hover-shadow transition-all group-card cursor-pointer position-relative overflow-hidden" style="background: ${r.color};">
+                    <span class="fs-1 mb-2 d-block">${r.icon}</span>
+                    <span class="badge bg-white border text-dark rounded-pill px-2.5 py-1 mb-3 text-xs fw-medium" style="width: fit-content;">${r.type}</span>
+                    <h3 class="h5 fw-bold text-dark leading-tight group-title transition-colors m-0">${r.title}</h3>
+                    <div class="d-flex align-items-center gap-3 mt-3 text-xs text-muted fw-medium">
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-clock small"></i> ${r.readTime}</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-star-fill text-warning"></i> ${r.rating}</span>
+                    </div>
+                    <button class="btn btn-link p-0 text-primary text-xs fw-bold mt-4 d-flex align-items-center gap-1 text-decoration-none group-arrow-move">
+                        Leer más <i class="bi bi-arrow-right font-bold"></i>
+                    </button>
+                </div>
+            </div>
+        `);
+    });
+
+    // 3. Renderizar Categorías en Botones de Bootstrap
+    const categoriesContainer = document.getElementById('categories-container');
+    resourceCategories.forEach(cat => {
+        const isActive = cat === activeCategory;
+        const btnClass = isActive ? 'btn-primary' : 'btn-light border text-muted';
+        categoriesContainer.insertAdjacentHTML('beforeend', `
+            <button class="btn btn-sm rounded-pill px-3 py-1.5 small fw-medium filter-category-btn" data-category="${cat}">
+                ${cat === "Todos" ? 'Todos' : cat + 's'}
+            </button>
+        `);
+    });
+
+    // Función Centralizadora de Renderizado de Todos los Recursos
+    function renderResourcesGrid() {
+        const grid = document.getElementById('resources-grid');
+        const noResults = document.getElementById('no-results');
+        grid.innerHTML = "";
+
+        // Lógica del filter() original de React
+        const filtered = allResources.filter(r => {
+            const matchCat = activeCategory === "Todos" || r.type === activeCategory;
+            const matchSearch = r.title.toLowerCase().includes(searchQuery.toLowerCase()) || r.desc.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchCat && matchSearch;
+        });
+
+        if (filtered.length === 0) {
+            noResults.classList.remove('d-none');
+            return;
+        } else {
+            noResults.classList.add('d-none');
+        }
+
+        // Crear Tarjetas
+        filtered.forEach(r => {
+            grid.insertAdjacentHTML('beforeend', `
+                <div class="col style-card-fade animate-in-card">
+                    <div class="card h-100 border rounded-4 bg-white overflow-hidden hover-shadow hover-translate transition-all group-card cursor-pointer">
+                        <div class="position-relative overflow-hidden" style="height: 160px;">
+                            <img src="${r.image}" alt="${r.title}" class="w-100 h-100 object-cover card-img-scale transition-all">
+                            ${r.type === 'Video' ? `
+                                <div class="position-absolute inset-0 bg-dark bg-opacity-25 d-flex align-items-center justify-content-center">
+                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center shadow" style="width: 44px; height: 44px;">
+                                        <i class="bi bi-play-fill text-primary fs-4 ps-0.5"></i>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="card-body p-4 text-start d-flex flex-col justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-2.5">
+                                    <div class="rounded-3 d-flex align-items-center justify-content-center ${r.colorClass}" style="width: 28px; height: 28px;">
+                                        <i class="bi ${r.icon} small"></i>
+                                    </div>
+                                    <span class="badge bg-light border text-muted rounded-2 px-2 py-0.5 text-xs fw-medium">${r.type}</span>
+                                </div>
+                                <h3 class="h6 fw-bold text-dark group-title transition-colors mb-1">${r.title}</h3>
+                                <p class="text-muted small leading-relaxed m-0">${r.desc}</p>
+                            </div>
+                            <button class="btn btn-link p-0 text-primary text-xs fw-bold mt-3 d-flex align-items-center gap-1 text-decoration-none group-arrow-move">
+                                Ver recurso <i class="bi bi-box-arrow-up-right small"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    }
+
+    // Inicializar Grid y Botones Activos
+    function updateCategoryButtonsUI() {
+        document.querySelectorAll('.filter-category-btn').forEach(btn => {
+            const cat = btn.getAttribute('data-category');
+            if(cat === activeCategory) {
+                btn.className = "btn btn-sm btn-primary rounded-pill px-3 py-1.5 small fw-medium filter-category-btn shadow-sm";
+            } else {
+                btn.className = "btn btn-sm btn-light border text-muted rounded-pill px-3 py-1.5 small fw-medium filter-category-btn";
+            }
+        });
+    }
+    
+    // Escuchar Clics en Categorías
+    document.querySelectorAll('.filter-category-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            activeCategory = e.currentTarget.getAttribute('data-category');
+            updateCategoryButtonsUI();
+            renderResourcesGrid();
+        });
+    });
+
+    // Escuchar Eventos de Entrada en Barra de Búsqueda
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderResourcesGrid();
+    });
+
+    // 4. Renderizar y Manejar Acordeón de Preguntas Frecuentes (FAQ)
+    const faqContainer = document.getElementById('faq-container');
+    
+    function renderFaqs() {
+        faqContainer.innerHTML = "";
+        faqs.forEach((faq, index) => {
+            const isOpen = openFaqIndex === index;
+            faqContainer.insertAdjacentHTML('beforeend', `
+                <div class="border rounded-3 overflow-hidden bg-white">
+                    <button 
+                        class="w-100 text-start border-0 px-4 py-3 bg-white d-flex align-items-center justify-content-between hover-bg-light transition-colors faq-trigger-btn"
+                        data-index="${index}"
+                    >
+                        <span class="fw-semibold text-dark small">${faq.q}</span>
+                        <i class="bi bi-chevron-right text-muted transition-transform ${isOpen ? 'rotate-90-icon' : ''}" style="font-size: 0.85rem;"></i>
+                    </button>
+                    <div class="faq-answer-pane ${isOpen ? 'd-block' : 'd-none'} px-4 pb-3 text-muted small style-faq-fade">
+                        ${faq.a}
+                    </div>
+                </div>
+            `);
+        });
+
+        // Re-adjuntar eventos a los nuevos botones inyectados
+        document.querySelectorAll('.faq-trigger-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.currentTarget.getAttribute('data-index'));
+                openFaqIndex = openFaqIndex === idx ? null : idx;
+                renderFaqs();
+            });
+        });
+    }
+
+    // Ejecuciones Iniciales Obligatorias
+    updateCategoryButtonsUI();
+    renderResourcesGrid();
+    renderFaqs();
+</script>
+
+<style>
+    /* Clases Auxiliares de Estilo y Tipografía */
+    .max-w-7xl { max-width: 1140px; }
+    .max-w-lg { max-width: 512px; }
+    .text-xs { font-size: 0.72rem; }
+    .mb-2\.5 { margin-bottom: 0.65rem; }
+    .bg-purple-subtle { background-color: #f3e8ff; }
+    .text-purple { color: #7c3aed; }
+    .object-cover { object-fit: cover; }
+    .whitespace-nowrap { white-space: nowrap; }
+
+    /* Efectos de Foco y Hover Estilo Premium */
+    .search-focus:focus {
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+    }
+    .hover-shadow { transition: all 0.25s ease; }
+    .hover-shadow:hover {
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05) !important;
+    }
+    .hover-translate { transition: transform 0.25s ease; }
+    .hover-translate:hover {
+        transform: translateY(-4px);
+    }
+    .hover-bg-light:hover {
+        background-color: #f8f9fa !important;
+    }
+
+    /* Dinámicas de Componentes Internos al hacer Hover en Tarjeta */
+    .group-card:hover .group-title {
+        color: #0d6efd !important;
+    }
+    .card-img-scale { transition: transform 0.3s ease; }
+    .group-card:hover .card-img-scale {
+        transform: scale(1.04);
+    }
+    .group-arrow-move { transition: gap 0.2s ease; }
+    .group-card:hover .group-arrow-move {
+        gap: 0.5rem !important;
+    }
+    .hover-scale { transition: transform 0.2s ease; }
+    .hover-scale:hover { transform: scale(1.03); }
+
+    /* Animaciones sutiles (Reemplazo de framer-motion) */
+    .floating-anim {
+        animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    
+    .animate-in-card {
+        animation: cardFadeIn 0.3s ease-out forwards;
+    }
+    @keyframes cardFadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Rotación de Iconos en el Acordeón */
+    .rotate-90-icon {
+        transform: rotate(90deg);
+        color: #0d6efd !important;
+    }
+</style>
+{% endblock %}

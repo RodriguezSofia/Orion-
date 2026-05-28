@@ -132,3 +132,51 @@ main {
 .animate-fade-in-up {
     animation: fadeInUp 0.6s ease-out forwards;
 }
+/* Acabados Estéticos Minimalistas de ARION */
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+.max-w-7xl {
+    max-width: 1280px;
+}
+.border-t {
+    border-top: 1px solid #f3f4f6;
+}
+.text-xs {
+    font-size: 0.75rem;
+}
+.object-cover {
+    object-fit: cover;
+}
+.object-contain {
+    object-fit: contain;
+}
+
+/* Animaciones y Estados Hover de las Tarjetas */
+.custom-project-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+.custom-project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02) !important;
+}
+.card-img-anim {
+    transition: transform 0.3s ease;
+}
+.custom-project-card:hover .card-img-anim {
+    transform: scale(1.04);
+}
+.card-title-hover {
+    transition: color 0.2s ease;
+}
+.custom-project-card:hover .card-title-hover {
+    color: #0d6efd !important; /* Color primario de Bootstrap */
+}
+
+/* Controladores del Grid / List view */
+.active-view {
+    background-color: #0d6efd !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(13, 110, 253, 0.2);
+}
